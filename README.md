@@ -1,1 +1,1 @@
-# unity_http_test
+# Unity에서 HTTP 통신을 테스트 해보기 위한 환경입니다.
