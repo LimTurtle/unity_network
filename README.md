@@ -24,3 +24,31 @@ string path = Path.Combine(Application.dataPath, "player_data.json"); //path 설
 string jsonData = File.ReadAllText(path); //json 파일을 string형태로 저장
 player = JsonUtility.FromJson<Data>(jsonData); //json 정보를 객체에 저장
 ```
+
+# HTTP Response
+- Unity 에서 보낸 GET / POST 요청에 대해 Django(SMGWinterDevCamp repo 환경)에서 response를 테스트
+- urls.py의 path에 경로를 추가하는데, ```path('HTTP_Test/', views.HTTP_Test.as_view(), name='HTTP_Test'),``` 처럼 as_view() 사용해 클래스로 처리
+    * 위 처럼 클래스로 path 지정 시, GET / POST 등 response를 자동으로 처리하는 것이 가능
+    
+    ```python
+    from django.http import JsonResponse, HttpResponse
+    class HTTP_Test(View):
+        def get(self, request):
+            data = {
+                "name": "lim",
+                "age": 10
+            }
+            return JsonResponse(data)
+
+        def post(self, request):
+            return HttpResponse("Post 요청")
+    ```
+    
+    * 주의할 점은 POST 기능을 사용할 때 Forbidden (CSRF token missing.) 403 오류가 발생하는 경우가 생기는데, 이를 해결하기 위해
+        
+        1\) ```X-CSRFToken```를 지정하거나,
+        
+        2\) settings.py -> MIDDLEWARE의 csrf를 주석 처리 (단, 이 방법은 보안 상 문제가 많으니, 다른 해결 방법 찾는 것이 좋음)
+        
+
+    
