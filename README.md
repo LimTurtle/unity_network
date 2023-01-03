@@ -50,5 +50,29 @@ player = JsonUtility.FromJson<Data>(jsonData); //json 정보를 객체에 저장
         
         2\) settings.py -> MIDDLEWARE의 csrf를 주석 처리 (단, 이 방법은 보안 상 문제가 많으니, 다른 해결 방법 찾는 것이 좋음)
         
-
+# Unity + Mirror 연동
+- Mirror는 Unity에서 Multiplay 기능을 사용하기 위한 Network Solution
+- 프로젝트 파일을 빌드할 때, Project Setting에서 창모드로 800x800 크기로 설정 후, Build and Run (이 때, 경로는 루트 기준 ```/Builds/```)
+- 기본적인 연동 순서는
+    * Empty Object에 Network Manager / Network Manager HUD / Kcp Transport Component 추가 (이 때, Network Manager의 Transport에 Kcp 넣어주기)
+    * Player Prefab 만들고 Network Identity / Network Transform Component / Player Script(C#) 추가
+        + Player Script 작성 시, 
+            ```csharp
+            using Mirror;
+            ...
+            public class PlayerController : NetworkBehaviour
+            ...
+            void Start()
+            {
+                ...
+                if(!isLocalPlayer) playerCamera.gameObject.SetActive(false); //Local 카메라만 쫓아가도록
+            }
+            void Update()
+            {
+                if(!isLocalPlayer) return;
+                ... //이동 관련
+            }
+            ```
+            
+    * Network Manager의 Player Prefab에 위에서 만든 Prefab을 넣어주기
     
