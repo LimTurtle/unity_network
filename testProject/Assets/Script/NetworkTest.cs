@@ -9,15 +9,16 @@ public class NetworkTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //StartCoroutine(UnityWebRequestGet());
-        StartCoroutine(UnityWebRequestPost());
+        StartCoroutine(UnityWebRequestGet());
+        //StartCoroutine(UnityWebRequestPost());
     }
 
     IEnumerator UnityWebRequestGet()
     {
-        string jobId = "41f1cdc2ff58bb5fdc287be0db2a8df3";
-        string jobGrowId = "df3870efe8e8754011cd12fa03cd275f";
-        string url = $"https://api.neople.co.kr/df/skills/{jobId}?jobGrowId={jobGrowId}&apikey=Of8CEcOZmRObP2oMVbnaDF9KMJSjZd5z";
+        //string jobId = "41f1cdc2ff58bb5fdc287be0db2a8df3";
+        //string jobGrowId = "df3870efe8e8754011cd12fa03cd275f";
+        //string url = $"https://api.neople.co.kr/df/skills/{jobId}?jobGrowId={jobGrowId}&apikey=Of8CEcOZmRObP2oMVbnaDF9KMJSjZd5z";
+        string url = "http://127.0.0.1:8000/HTTP_Test/";
         UnityWebRequest www = UnityWebRequest.Get(url);
 
         yield return www.SendWebRequest();
@@ -34,7 +35,8 @@ public class NetworkTest : MonoBehaviour
 
     IEnumerator UnityWebRequestPost()
     {
-        string url = "https://jsonplaceholder.typicode.com/posts";
+        //string url = "https://jsonplaceholder.typicode.com/posts";
+        string url = "http://127.0.0.1:8000/HTTP_Test/";
         WWWForm form = new WWWForm();
         int userID = 11;
         int id = 101;
@@ -56,7 +58,7 @@ public class NetworkTest : MonoBehaviour
         }
         else
         {
-            Debug.Log("ERROR");
+            Debug.Log(www.error);
         }
     }
 
