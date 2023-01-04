@@ -15,6 +15,10 @@ public class PlayerController : NetworkBehaviour
     public float lookSpeed = 2.0f;
     public float lookXLimit = 45.0f;
 
+    [SyncVar (hook = "On_Color_Changed")]
+    public Color my_color;
+    public MeshRenderer mesh;
+
     CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
     float rotationX = 0;
@@ -22,10 +26,17 @@ public class PlayerController : NetworkBehaviour
     [HideInInspector]
     public bool canMove = true;
 
+    void On_Color_Changed(Color old_color, Color new_color)
+    {
+        my_color = new_color;
+        GetComponent<MeshRenderer>().material.color = my_color;
+    }
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
-
+        //mesh = GetComponent<MeshRenderer>();
+        //mesh.material.color = my_color;
         // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
