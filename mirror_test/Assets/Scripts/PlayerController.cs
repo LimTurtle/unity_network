@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using Cinemachine;
 
 [RequireComponent(typeof(CharacterController))]
 
@@ -11,9 +12,10 @@ public class PlayerController : NetworkBehaviour
     public float runningSpeed = 11.5f;
     public float jumpSpeed = 8.0f;
     public float gravity = 20.0f;
-    public Camera playerCamera;
+    //public Camera playerCamera;
     public float lookSpeed = 2.0f;
     public float lookXLimit = 45.0f;
+    [SerializeField] private CinemachineFreeLook free_look_camera;
 
     [SyncVar (hook = "On_Color_Changed")]
     public Color my_color;
@@ -40,7 +42,13 @@ public class PlayerController : NetworkBehaviour
         // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        if(!isLocalPlayer) playerCamera.gameObject.SetActive(false);
+        //if(!isLocalPlayer) playerCamera.gameObject.SetActive(false);
+        if (isLocalPlayer)
+        {
+            free_look_camera = CinemachineFreeLook.FindObjectOfType<CinemachineFreeLook>();
+            free_look_camera.LookAt = this.gameObject.transform;
+            free_look_camera.Follow = this.gameObject.transform;
+        }
     }
 
     void Update()
@@ -75,14 +83,15 @@ public class PlayerController : NetworkBehaviour
 
         // Move the controller
         characterController.Move(moveDirection * Time.deltaTime);
-
+        
         // Player and Camera rotation
         if (canMove)
         {
             rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
             rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
-            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+            //playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
             transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
         }
+        
     }
 }
