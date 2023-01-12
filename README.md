@@ -76,3 +76,42 @@ player = JsonUtility.FromJson<Data>(jsonData); //json 정보를 객체에 저장
             
     * Network Manager의 Player Prefab에 위에서 만든 Prefab을 넣어주기
     
+# Unity WebSocket
+- [여기](https://timeboxstory.tistory.com/69)의 C# WebSocket 오픈 소스 사용
+- Assets 폴더 내 Plugins 폴더를 생성 후, WebSocket dll파일을 등록하고, ```using WebSocketSharp```으로 사용
+- OnXXX 메소드 사용법은 [여기](https://github.com/sta/websocket-sharp)를 참고
+
+## WebSocket 연결
+```csharp
+m_Socket = new WebSocketSharp.WebSocket("ws://IP주소:포트번호/서비스(웹 url)");
+m_Socket.OnMessage += Recv; //메시지를 받은 경우 호출할 Recv(~) 함수
+m_Socket.OnClose += CloseConnect; //클라이언트 종료 시 호출할 CloseConnect(~) 함수 
+m_Socket.Connect();
+
+```
+
+## WebSocketServer로 데이터 전송
+```csharp
+m_Socket.Send(Encoding.UTF8.GetBytes(msg)); //같은 C#을 사용하는 서버에서는 Bytes 이용하니 Error. String은 제대로 인식함 -> Why?
+```
+
+## WebSocket의 OnXXX 메소드에 의해 호출되는 함수
+```csharp
+public void Recv(object sender, MessageEventArgs e)
+{
+    Debug.Log(e.Data);
+}
+
+public void CloseConnect(object sender, CloseEventArgs e)
+{
+    m_Socket.Close();
+}
+```
+
+## Client가 강제 종료되는 경우
+```csharp
+private void OnApplicationQuit()
+{
+    m_Socket.Close(); //강제 종료되더라도, 안전하게 서버와의 통신을 중단
+}
+```
